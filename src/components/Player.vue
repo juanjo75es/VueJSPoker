@@ -9,6 +9,7 @@
       data() {
         return {
             image: '/images/chip.png',
+            back_image: '/images/back.png',
             button_image: '/images/dealer-button.png',
             classname: String
         }
@@ -37,8 +38,8 @@
                     </Card>
                 </div>
                 <div v-else-if="player.playing" class="cartas">
-                    <img class="reverso" src="images/back.png"/>
-                    <img class="reverso" src="images/back.png"/>
+                    <img class="reverso" :src="back_image"/>
+                    <img class="reverso" :src="back_image"/>
                 </div>
                 <div class="card">
                     <div class="card_img">
