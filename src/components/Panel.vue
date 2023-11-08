@@ -21,7 +21,33 @@
         check: { type: Function },
         raise: { type: Function },
       },
+      computed: {
+        computedRaised() {
+            return this.raised
+        },
+        maxRaiseAmount() {
+            return this.state.players[0].money
+        }
+      },
       methods:{
+        handleClickFold() {
+            let st = this.fold(this.state)
+            st = this.next_player_speaks(st)
+            this.set_state(st)
+            this.audio4.play()
+        },
+        betAmount() {
+            return this.state.call - this.state.players[0].bet
+        },
+        handleClickCheck() {
+            if (this.state.call - this.state.players[0].bet == 0)
+                this.audio.play()
+            else
+                this.audio2.play()
+            let st = this.check(this.state)
+            st = this.next_player_speaks(st)
+            this.set_state(st)
+        },
         handleClickRaise() {
             console.log("raised: "+this.raised)
             let st=this.raise(this.state,+this.raised)
@@ -37,29 +63,16 @@
 <template>
     <div class="Panel">
                 <div>
-                <a class="myButton" @click="() => {
-                        let st=this.fold(this.state)
-                        st=this.next_player_speaks(st)
-                        this.set_state(st) 
-                        audio4.play()
-                    }">Fold</a>
+                <a class="myButton" @click="handleClickFold">Fold</a>
                 </div>
                 <div>
-                <a class="myButton" @click="() => {
-                        if(this.state.call-this.state.players[0].bet==0)
-                            audio.play()
-                        else
-                            audio2.play()
-                        let st=this.check(this.state)                        
-                        st=this.next_player_speaks(st)
-                        this.set_state(st)
-                    }">Check {{this.state.call-this.state.players[0].bet}}</a>
+                <a class="myButton" @click="handleClickCheck">Check {{ betAmount() }}</a>
                 </div>
                 <div>
                 <a class="myButton" @click="handleClickRaise">Raise {{raised}}</a>
                 </div>
                 <div>
-                    <input type="range" v-model="raised" min="100" :max="this.state.players[0].money"/>
+                    <input type="range" v-model="computedRaised" min="100" :max="maxRaiseAmount"/>
                 </div>
            </div>
 </template>
